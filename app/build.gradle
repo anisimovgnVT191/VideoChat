@@ -51,10 +51,15 @@ dependencies {
     runtimeOnly "io.reactivex.rxjava2:rxkotlin:$rootProject.rxKotlinVersion"
 
     //WebRTC
-    implementation "org.webrtc:google-webrtc:$rootProject.webRtcVersion"
+    implementation "org.webrtc:google-webrtc:1.0.+"
 
     //Firestore/Cloud fire
     implementation platform("com.google.firebase:firebase-bom:$rootProject.firebaseBomVersion")
-    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
+    //Elmslie
+    implementation "com.github.vivid-money.elmslie:elmslie-core:$rootProject.elmslieVersion"
+    implementation "com.github.vivid-money.elmslie:elmslie-android:$rootProject.elmslieVersion"
+    implementation "com.github.vivid-money.elmslie:elmslie-rxjava-2:$rootProject.elmslieVersion"
 }

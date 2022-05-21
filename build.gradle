@@ -9,8 +9,9 @@ ext {
     rxKotlinVersion = '2.4.0'
     rxJava2Version = '2.2.21'
     dagger2Version = '2.42'
-    webRtcVersion = '1.0.32006'
+    webRtcVersion = '1.0.+'
     firebaseBomVersion = '30.0.2'
+    elmslieVersion = '2.0.0'
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
