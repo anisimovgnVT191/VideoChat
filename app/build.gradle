@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -40,4 +41,20 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    //Dagger2
+    implementation "com.google.dagger:dagger:$rootProject.dagger2Version"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.dagger2Version"
+
+    //RxJava2
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxJava2Version"
+    runtimeOnly "io.reactivex.rxjava2:rxkotlin:$rootProject.rxKotlinVersion"
+
+    //WebRTC
+    implementation "org.webrtc:google-webrtc:$rootProject.webRtcVersion"
+
+    //Firestore/Cloud fire
+    implementation platform("com.google.firebase:firebase-bom:$rootProject.firebaseBomVersion")
+    implementation 'com.google.firebase:firebase-firestore'
+
 }

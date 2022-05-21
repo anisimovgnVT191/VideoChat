@@ -5,6 +5,13 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
 }
 
+ext {
+    rxKotlinVersion = '2.4.0'
+    rxJava2Version = '2.2.21'
+    dagger2Version = '2.42'
+    webRtcVersion = '1.0.32006'
+    firebaseBomVersion = '30.0.2'
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
