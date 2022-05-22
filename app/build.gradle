@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -64,6 +65,7 @@ dependencies {
     //Firestore/Cloud fire
     implementation platform("com.google.firebase:firebase-bom:$rootProject.firebaseBomVersion")
     implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //Elmslie

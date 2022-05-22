@@ -1,13 +1,12 @@
 package com.example.android.videochat.data.rtc
 
 import com.example.android.videochat.data.models.OfferModel
-import io.reactivex.Single
-import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 
 interface RtcClient {
-    fun createSdpOffer(): BehaviorSubject<OfferModel>
+    fun createSdpOffer(): PublishSubject<OfferModel>
 
-    fun createSdpAnswer(): BehaviorSubject<OfferModel>
+    fun createSdpAnswer(): PublishSubject<OfferModel>
 
     fun onSdpOfferReceived(offerModel: OfferModel)
 }

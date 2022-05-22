@@ -16,5 +16,6 @@ dependencyResolutionManagement {
         jcenter()
     }
 }
+
 rootProject.name = "VideoChat"
 include ':app'

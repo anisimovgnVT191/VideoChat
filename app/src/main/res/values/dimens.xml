@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_logo_size">96dp</dimen>
+    <dimen name="card_logo_corners_radius">20dp</dimen>
+    <dimen name="card_logo_elevation">10dp</dimen>
+    <dimen name="default_text_size">18sp</dimen>
+</resources>

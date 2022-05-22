@@ -4,6 +4,7 @@ import com.example.android.videochat.data.models.OfferModel
 import com.example.android.videochat.presentation.models.SessionOfferType
 import com.google.firebase.firestore.FirebaseFirestore
 import io.reactivex.subjects.BehaviorSubject
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class SignalServerImpl @Inject constructor(
@@ -29,7 +30,7 @@ class SignalServerImpl @Inject constructor(
                 sendOffersSubject.onNext(Unit)
             }
             .addOnFailureListener {
-                error("Something went wrong")
+                sendOffersSubject.onError(IllegalAccessException())
             }
 
         return sendOffersSubject
@@ -38,7 +39,9 @@ class SignalServerImpl @Inject constructor(
     override fun getCallOffer(callId: String, type: SessionOfferType): BehaviorSubject<OfferModel> {
         firestore.collection(CALLS_COLLECTION)
             .addSnapshotListener { value, error ->
-                error ?: error("Something went wrong")
+                if (error != null) {
+                    getOffersSubject.onError(IllegalStateException())
+                }
 
                 value?.documents?.find { documentSnapshot ->
                     if (documentSnapshot.id != callId) {

@@ -1,19 +1,21 @@
 package com.example.android.videochat.data.rtc
 
+import android.content.Context
 import com.example.android.videochat.data.models.IceCandidateModel
 import com.example.android.videochat.data.models.OfferModel
 import com.example.android.videochat.data.rtc.utils.PeerConnectionObserver
 import com.example.android.videochat.data.rtc.utils.SdpObserver
 import com.example.android.videochat.presentation.models.SessionOfferType
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import org.webrtc.*
 import org.webrtc.SessionDescription.Type.OFFER
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class RtcClientImpl @Inject constructor(
-    private val iceServersSet: Set<PeerConnection.IceServer>
+    private val iceServersSet: Set<@JvmSuppressWildcards PeerConnection.IceServer>,
+    context: Context
 ) : RtcClient {
     val iceCandidateSubject = BehaviorSubject.create<IceCandidateModel>()
     private val peerConnectionObserver = object : PeerConnectionObserver() {
@@ -24,7 +26,7 @@ class RtcClientImpl @Inject constructor(
         }
     }
 
-    val sdpOfferSubject = BehaviorSubject.create<OfferModel>()
+    val sdpOfferSubject = PublishSubject.create<OfferModel>()
     private val sdpObserver = object : SdpObserver() {
         override fun onCreateSuccess(p0: SessionDescription?) {
             p0?.let { sessionDescription ->
@@ -43,12 +45,15 @@ class RtcClientImpl @Inject constructor(
         mandatory.add(MediaConstraints.KeyValuePair(OFFER_TO_RECEIVE_VIDEO, "true"))
     }
 
-    override fun createSdpOffer(): BehaviorSubject<OfferModel> {
+    init {
+        PeerConnectionFactory.initialize(PeerConnectionFactory.InitializationOptions.builder(context).createInitializationOptions())
+    }
+    override fun createSdpOffer(): PublishSubject<OfferModel> {
         peerConnection.createOffer(sdpObserver, mediaConstraints)
         return sdpOfferSubject
     }
 
-    override fun createSdpAnswer(): BehaviorSubject<OfferModel> {
+    override fun createSdpAnswer(): PublishSubject<OfferModel> {
         peerConnection.createAnswer(sdpObserver, MediaConstraints())
         return sdpOfferSubject
     }

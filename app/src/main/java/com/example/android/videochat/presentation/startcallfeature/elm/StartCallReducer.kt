@@ -36,5 +36,6 @@ class StartCallReducer @Inject constructor() :
         is StartCallEvent.EventUI.StartCallButtonPressed -> {
             commands { +StartCallCommand.StartCall(event.callId) }
         }
+        StartCallEvent.EventUI.InitUiEvent -> Unit
     }
 }
