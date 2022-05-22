@@ -32,13 +32,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToStartCallFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(binding.fragmentContainer.id, StartCallFragment())
+            .replace(binding.fragmentContainerView.id, StartCallFragment())
             .commit()
     }
 
-    private fun navigateToCallFragment(callId: String, userType: UserType) {
+    fun navigateToCallFragment(callId: String, userType: UserType) {
         supportFragmentManager.beginTransaction()
-            .replace(binding.fragmentContainer.id, CallFragment.newInstance(callId, userType))
+            .replace(binding.fragmentContainerView.id, CallFragment.newInstance(callId, userType))
             .commit()
     }
 }

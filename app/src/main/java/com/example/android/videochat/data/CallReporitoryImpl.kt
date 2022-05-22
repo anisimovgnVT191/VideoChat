@@ -4,6 +4,7 @@ import com.example.android.videochat.data.rtc.RtcClient
 import com.example.android.videochat.data.signalserver.SignalServer
 import com.example.android.videochat.domain.CallRepository
 import com.example.android.videochat.presentation.models.SessionOfferType
+import com.example.android.videochat.presentation.models.UserType
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -30,7 +31,26 @@ class CallRepositoryImpl @Inject constructor(
     override fun getCalleeResponse(callId: String) =
         signalServer.getCallOffer(callId, SessionOfferType.ANSWER)
             .take(1)
-            .flatMap {
-                Observable.just(rtcClient.onSdpOfferReceived())
+            .flatMap { offer ->
+                Observable.just(rtcClient.onSdpOfferReceived(offer))
             }.singleOrError()
+
+    override fun startIceCandidatesExchange(callId: String, userType: UserType): Observable<Unit> {
+        return Observable.merge(
+            addIceCandidateToDb(callId, userType),
+            getIceCandidateToDb(callId, userType)
+        )
+    }
+
+    private fun addIceCandidateToDb(callId: String, userType: UserType) =
+        rtcClient.subscribeToIceCandidates()
+            .flatMap { iceCandidate ->
+                signalServer.sendIceCandidate(callId, userType, iceCandidate)
+            }
+
+    private fun getIceCandidateToDb(callId: String, userType: UserType) =
+        signalServer.getIceCandidate(callId, userType)
+            .flatMap { iceCandidate ->
+                Observable.just(rtcClient.addIceCandidate(iceCandidate))
+            }
 }

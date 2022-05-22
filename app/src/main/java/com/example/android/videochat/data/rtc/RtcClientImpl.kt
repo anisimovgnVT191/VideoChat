@@ -6,6 +6,7 @@ import com.example.android.videochat.data.models.OfferModel
 import com.example.android.videochat.data.rtc.utils.PeerConnectionObserver
 import com.example.android.videochat.data.rtc.utils.SdpObserver
 import com.example.android.videochat.presentation.models.SessionOfferType
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.webrtc.*
@@ -17,7 +18,7 @@ class RtcClientImpl @Inject constructor(
     private val iceServersSet: Set<@JvmSuppressWildcards PeerConnection.IceServer>,
     context: Context
 ) : RtcClient {
-    val iceCandidateSubject = BehaviorSubject.create<IceCandidateModel>()
+    private val iceCandidateSubject = BehaviorSubject.create<IceCandidateModel>()
     private val peerConnectionObserver = object : PeerConnectionObserver() {
         override fun onIceCandidate(p0: IceCandidate?) {
             p0?.let { iceCandidate ->
@@ -26,7 +27,7 @@ class RtcClientImpl @Inject constructor(
         }
     }
 
-    val sdpOfferSubject = PublishSubject.create<OfferModel>()
+    private val sdpOfferSubject = PublishSubject.create<OfferModel>()
     private val sdpObserver = object : SdpObserver() {
         override fun onCreateSuccess(p0: SessionDescription?) {
             p0?.let { sessionDescription ->
@@ -62,6 +63,11 @@ class RtcClientImpl @Inject constructor(
         peerConnection.setRemoteDescription(sdpObserver, offerModel.toSessionDescription())
     }
 
+    override fun subscribeToIceCandidates(): Observable<IceCandidateModel> = iceCandidateSubject
+
+    override fun addIceCandidate(iceCandidate: IceCandidateModel) {
+        peerConnection.addIceCandidate(iceCandidate.toFramework())
+    }
     private fun buildPeerConnectionFactory(): PeerConnectionFactory {
         return PeerConnectionFactory
             .builder()
@@ -84,7 +90,11 @@ class RtcClientImpl @Inject constructor(
     }
 
     private fun IceCandidate.toModel() = with(this) {
-        IceCandidateModel(adapterType, sdp, sdpMLineIndex, sdpMid, serverUrl)
+        IceCandidateModel(sdp, sdpMLineIndex, sdpMid, serverUrl)
+    }
+
+    private fun IceCandidateModel.toFramework() = with(this) {
+        IceCandidate(sdpMid, sdpMLineIndex, sdp)
     }
 
     private fun SessionDescription.toOfferModel() = with(this) {

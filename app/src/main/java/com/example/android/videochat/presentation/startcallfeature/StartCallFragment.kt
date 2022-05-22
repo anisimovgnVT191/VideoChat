@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.android.videochat.MainActivity
 import com.example.android.videochat.R
 import com.example.android.videochat.databinding.FragmentStartCallBinding
 import com.example.android.videochat.di.AppComponentHolder
@@ -65,19 +66,13 @@ class StartCallFragment : ElmFragment<StartCallEvent, StartCallEffect, StartCall
 
     override fun handleEffect(effect: StartCallEffect) = when (effect) {
         is StartCallEffect.NavigateToCallScreen -> {
-            Toast.makeText(this.requireContext(), "All is good", Toast.LENGTH_SHORT).show()
+            navigateToCallScreen(effect.callId, effect.userType)
         }
     }
 
     override fun createStore() = startCallStore
 
     private fun navigateToCallScreen(callId: String, userType: UserType) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.fragment_container, CallFragment.newInstance(
-                    callId = callId,
-                    userType = userType
-                )
-            ).commit()
+        (requireActivity() as MainActivity).navigateToCallFragment(callId, userType)
     }
 }

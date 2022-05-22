@@ -1,7 +1,9 @@
 package com.example.android.videochat.data.signalserver
 
+import com.example.android.videochat.data.models.IceCandidateModel
 import com.example.android.videochat.data.models.OfferModel
 import com.example.android.videochat.presentation.models.SessionOfferType
+import com.example.android.videochat.presentation.models.UserType
 import io.reactivex.subjects.BehaviorSubject
 import org.webrtc.*
 
@@ -16,68 +18,15 @@ interface SignalServer {
         callId: String,
         type: SessionOfferType
     ): BehaviorSubject<OfferModel>
+
+    fun sendIceCandidate(
+        callId: String,
+        userType: UserType,
+        iceCandidate: IceCandidateModel
+    ): BehaviorSubject<Unit>
+
+    fun getIceCandidate(
+        callId: String,
+        userType: UserType
+    ): BehaviorSubject<IceCandidateModel>
 }
-
-val test = PeerConnectionFactory.builder().createPeerConnectionFactory().createPeerConnection(listOf(), object : PeerConnection.Observer {
-    override fun onSignalingChange(p0: PeerConnection.SignalingState?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceConnectionChange(p0: PeerConnection.IceConnectionState?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceConnectionReceivingChange(p0: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceGatheringChange(p0: PeerConnection.IceGatheringState?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceCandidate(p0: IceCandidate?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onIceCandidatesRemoved(p0: Array<out IceCandidate>?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAddStream(p0: MediaStream?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onRemoveStream(p0: MediaStream?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onDataChannel(p0: DataChannel?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onRenegotiationNeeded() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {
-        TODO("Not yet implemented")
-    }
-
-})?.createOffer(object : SdpObserver {
-    override fun onCreateSuccess(p0: SessionDescription?) {
-        p0?.type
-    }
-
-    override fun onSetSuccess() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onCreateFailure(p0: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onSetFailure(p0: String?) {
-        TODO("Not yet implemented")
-    }
-
-}, MediaConstraints())
