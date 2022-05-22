@@ -1,17 +1,21 @@
 package com.example.android.videochat.data.signalserver
 
+import com.example.android.videochat.data.models.OfferModel
+import com.example.android.videochat.presentation.models.SessionOfferType
+import io.reactivex.subjects.BehaviorSubject
 import org.webrtc.*
 
 interface SignalServer {
     fun sendCallOffer(
         callId: String,
         sdp: String,
-        type: SessionDescription.Type
-    )
+        type: SessionOfferType
+    ): BehaviorSubject<Unit>
 
     fun getCallOffer(
-        callId: String
-    )
+        callId: String,
+        type: SessionOfferType
+    ): BehaviorSubject<OfferModel>
 }
 
 val test = PeerConnectionFactory.builder().createPeerConnectionFactory().createPeerConnection(listOf(), object : PeerConnection.Observer {
